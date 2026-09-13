@@ -1,0 +1,9 @@
+<%= form_with model: pet, url: pet.persisted? ? admin_pet_path(pet) : admin_pets_path, method: pet.persisted? ? :patch : :post, class: "space-y-5" do |form| %>
+  <% if pet.errors.any? %><div class="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600"><%= pet.errors.full_messages.to_sentence %></div><% end %>
+  <div><%= form.label :owner_id, "Owner", class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.collection_select :owner_id, @owners, :id, :full_name, { prompt: "Select an owner" }, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :name, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.text_field :name, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :breed, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.text_field :breed, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :size, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.text_field :size, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :notes, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.text_area :notes, rows: 3, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <%= form.submit pet.persisted? ? "Save pet" : "Create pet", class: "rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold text-white" %>
+<% end %>

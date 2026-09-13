@@ -1,0 +1,45 @@
+<% content_for :title, "My Profile" %>
+
+<div class="mx-auto w-full max-w-5xl space-y-6 py-8 sm:py-12">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6d4e97]">Account</p>
+      <h1 class="mt-2 text-4xl font-black tracking-tight text-[#302735]">My profile</h1>
+      <p class="mt-2 text-sm text-[#6e6670]">Your account and pet care details.</p>
+    </div>
+    <% unless current_user.admin? %><%= link_to "Edit profile", settings_path, class: "rounded-full bg-[#6d4e97] px-5 py-3 text-center text-sm font-bold text-white transition hover:bg-[#563d75]" %><% end %>
+  </div>
+
+  <section class="rounded-3xl border border-[#eadfd5] bg-white p-6 shadow-sm sm:p-8">
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
+      <span class="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-[#efe6f8] text-2xl text-[#6d4e97]">&#9829;</span>
+      <div>
+        <h2 class="text-2xl font-black text-[#302735]"><%= @owner&.full_name.presence || current_user.email.split("@").first.titleize %></h2>
+        <p class="mt-1 text-sm text-[#6e6670]"><%= current_user.admin? ? "Administrator" : "Member" %></p>
+      </div>
+    </div>
+    <dl class="mt-7 grid gap-5 border-t border-[#f0e8e1] pt-6 sm:grid-cols-3">
+      <div><dt class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Email</dt><dd class="mt-2 wrap-break-word text-sm font-semibold text-[#302735]"><%= current_user.email %></dd></div>
+      <div><dt class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Phone</dt><dd class="mt-2 text-sm font-semibold text-[#302735]"><%= @owner&.phone.presence || "Not added" %></dd></div>
+      <div><dt class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Member since</dt><dd class="mt-2 text-sm font-semibold text-[#302735]"><%= current_user.created_at.strftime("%B %-d, %Y") %></dd></div>
+    </dl>
+  </section>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section class="rounded-3xl border border-[#eadfd5] bg-white p-6 shadow-sm">
+      <div class="flex items-center justify-between"><h2 class="text-xl font-black text-[#302735]">My pets</h2><%= link_to "Manage pets", pets_path, class: "text-xs font-bold text-[#6d4e97] hover:underline" unless current_user.admin? %></div>
+      <div class="mt-5 space-y-3">
+        <% @pets.each do |pet| %><%= link_to pet_path(pet), class: "flex items-center justify-between rounded-xl bg-[#fbf8f5] p-4 transition hover:bg-[#f4eff9]" do %><span><span class="block font-bold text-[#302735]"><%= pet.name.presence || "Unnamed pet" %></span><span class="mt-1 block text-xs text-[#6e6670]"><%= pet.breed.presence || "Breed not set" %></span></span><span class="text-xs font-semibold text-[#6d4e97]"><%= pet.size.presence || "Size not set" %></span><% end %><% end %>
+        <% if @pets.empty? %><p class="rounded-xl bg-[#fbf8f5] p-4 text-sm text-[#6e6670]">No pets added yet.</p><% end %>
+      </div>
+    </section>
+
+    <section class="rounded-3xl border border-[#eadfd5] bg-white p-6 shadow-sm">
+      <div class="flex items-center justify-between"><h2 class="text-xl font-black text-[#302735]">Recent appointments</h2><%= link_to "View all", appointments_path, class: "text-xs font-bold text-[#6d4e97] hover:underline" unless current_user.admin? %></div>
+      <div class="mt-5 space-y-3">
+        <% @appointments.each do |appointment| %><%= link_to appointment_path(appointment), class: "flex items-center justify-between rounded-xl bg-[#fbf8f5] p-4 transition hover:bg-[#f4eff9]" do %><span><span class="block font-bold text-[#302735]"><%= appointment.pet&.name || "Pet unavailable" %></span><span class="mt-1 block text-xs text-[#6e6670]"><%= appointment.service.presence || "Grooming" %></span></span><span class="text-right text-xs font-semibold text-[#6d4e97]"><%= appointment.date_time&.strftime("%b %-d, %Y") || "Date not set" %></span><% end %><% end %>
+        <% if @appointments.empty? %><p class="rounded-xl bg-[#fbf8f5] p-4 text-sm text-[#6e6670]">No appointments yet.</p><% end %>
+      </div>
+    </section>
+  </div>
+</div>

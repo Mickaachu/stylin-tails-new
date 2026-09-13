@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Gabarito:wght@400..900&display=swap');
+
+:root {
+  --primary: #6d4e97;
+  --primary-dark: #563d75;
+  --soft-bg: #f6f0ea;
+  --muted: #5b5562;
+  --card: #f3efe9;
+}
+
+.bg-primary {
+  @apply bg-[#6D4E97];
+}
+
+.bg-primary-dark {
+  @apply bg-[#563d75];
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
+}
+
+body {
+  background: var(--soft-bg);
+  color: #201d22;
+}
+
+* {
+  font-family: "Figtree", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Gabarito", sans-serif;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.soft-card {
+  background: var(--card);
+}
+
+.logo-mark {
+  display: inline-flex;
+  width: 1.75rem;
+  height: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--primary), #9d76c6);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

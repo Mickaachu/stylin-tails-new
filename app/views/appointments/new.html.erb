@@ -1,0 +1,54 @@
+<% content_for :title, "Book Your Appointment" %>
+
+<div class="mx-auto w-full max-w-7xl pb-16">
+  <div class="mb-8">
+    <h1 class="text-4xl font-black tracking-[-0.06em] text-[#201d22] md:text-5xl">Book Your Appointment</h1>
+    <p class="mt-2 text-base text-[#5b5562]">Take a minute to tell us about your pet. Our team will verify and lock in your session.</p>
+  </div>
+
+  <div class="grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <%= render "form", appointment: @appointment %>
+
+    <aside class="rounded-[22px] border border-[#e7ddd1] bg-white p-6 shadow-sm lg:sticky lg:top-24">
+      <h2 class="text-2xl font-black text-[#201d22]">Summary</h2>
+      <div class="my-5 border-t border-[#eadfd5]"></div>
+      <dl class="space-y-4 text-sm">
+        <div class="flex justify-between gap-4"><dt class="text-[#6e6670]">Service</dt><dd id="summary-service" class="text-right font-bold text-[#6d4e97]">Full Grooming Session</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-[#6e6670]">Date</dt><dd id="summary-date" class="text-right font-semibold text-[#201d22]">Select a date</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-[#6e6670]">Time</dt><dd id="summary-time" class="text-right font-semibold text-[#201d22]">Select a time</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-[#6e6670]">Pet Name</dt><dd id="summary-pet" class="text-right font-semibold text-[#201d22]">Select a pet</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-[#6e6670]">Breed</dt><dd id="summary-breed" class="text-right font-semibold text-[#201d22]">-</dd></div>
+      </dl>
+      <div class="my-5 border-t border-[#eadfd5]"></div>
+      <div class="flex items-center justify-between"><span class="font-bold text-[#201d22]">Estimated Cost</span><span id="summary-cost" class="text-2xl font-black text-[#6d4e97]">$75</span></div>
+      <button type="submit" form="new_appointment" class="mt-6 w-full rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#563d75] hover:shadow-lg hover:shadow-[#6d4e97]/20">Confirm Booking</button>
+      <p class="mt-4 text-center text-xs leading-5 text-[#817884]">No charge now. You will pay at the salon after service.</p>
+    </aside>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const dateField = document.getElementById("appointment_date_time");
+    const petField = document.getElementById("appointment_pet_id");
+    const petDetails = <%= raw @pets.index_by(&:id).transform_values { |pet| { name: pet.name, breed: pet.breed } }.to_json %>;
+
+    function updateSummary() {
+      const selectedService = document.querySelector(".appointment-service:checked");
+      const selectedPet = petDetails[petField.value];
+      const selectedDate = dateField.value ? new Date(dateField.value) : null;
+
+      document.getElementById("summary-service").textContent = selectedService ? selectedService.value : "Select a service";
+      document.getElementById("summary-cost").textContent = selectedService ? "$" + selectedService.dataset.price : "$0";
+      document.getElementById("summary-pet").textContent = selectedPet ? selectedPet.name : "Select a pet";
+      document.getElementById("summary-breed").textContent = selectedPet && selectedPet.breed ? selectedPet.breed : "-";
+      document.getElementById("summary-date").textContent = selectedDate ? selectedDate.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "Select a date";
+      document.getElementById("summary-time").textContent = selectedDate ? selectedDate.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Select a time";
+    }
+
+    document.querySelectorAll(".appointment-service").forEach(function (field) { field.addEventListener("change", updateSummary); });
+    dateField.addEventListener("change", updateSummary);
+    petField.addEventListener("change", updateSummary);
+    updateSummary();
+  });
+</script>

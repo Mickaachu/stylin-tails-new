@@ -1,0 +1,41 @@
+<div class="soft-card rounded-[28px] border border-[#e8e0d9] p-5 shadow-[0_20px_50px_rgba(109,78,151,0.08)] sm:p-8">
+  <%= form_with(model: pet, class: "space-y-6") do |form| %>
+    <%= form.hidden_field :owner_id, value: current_user&.owner&.id %>
+
+    <% if pet.errors.any? %>
+      <div id="error_explanation" class="rounded-2xl border border-[#f1c9d1] bg-[#fff5f6] px-4 py-3 text-sm text-[#8f3d4f]">
+        <h2 class="mb-2 font-bold"><%= pluralize(pet.errors.count, "error") %> prohibited this pet from being saved:</h2>
+
+        <ul class="ml-5 list-disc space-y-1">
+          <% pet.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="space-y-2">
+      <%= form.label :name, class: "block text-xs font-bold uppercase tracking-[0.12em] text-[#5b5562]" %>
+      <%= form.text_field :name, class: ["block w-full rounded-2xl border bg-white/80 px-4 py-3 text-[#201d22] shadow-sm transition focus:outline-none focus:ring-4", {"border-[#d7cfc7] focus:border-[#6d4e97] focus:ring-[#6d4e97]/10": pet.errors[:name].none?, "border-[#d97d8b] focus:border-[#c94b63] focus:ring-[#f43f5e]/10": pet.errors[:name].any?}] %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :breed, class: "block text-xs font-bold uppercase tracking-[0.12em] text-[#5b5562]" %>
+      <%= form.text_field :breed, class: ["block w-full rounded-2xl border bg-white/80 px-4 py-3 text-[#201d22] shadow-sm transition focus:outline-none focus:ring-4", {"border-[#d7cfc7] focus:border-[#6d4e97] focus:ring-[#6d4e97]/10": pet.errors[:breed].none?, "border-[#d97d8b] focus:border-[#c94b63] focus:ring-[#f43f5e]/10": pet.errors[:breed].any?}] %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :size, class: "block text-xs font-bold uppercase tracking-[0.12em] text-[#5b5562]" %>
+      <%= form.text_field :size, class: ["block w-full rounded-2xl border bg-white/80 px-4 py-3 text-[#201d22] shadow-sm transition focus:outline-none focus:ring-4", {"border-[#d7cfc7] focus:border-[#6d4e97] focus:ring-[#6d4e97]/10": pet.errors[:size].none?, "border-[#d97d8b] focus:border-[#c94b63] focus:ring-[#f43f5e]/10": pet.errors[:size].any?}] %>
+    </div>
+
+    <div class="space-y-2">
+      <%= form.label :notes, class: "block text-xs font-bold uppercase tracking-[0.12em] text-[#5b5562]" %>
+      <%= form.text_field :notes, class: ["block w-full rounded-2xl border bg-white/80 px-4 py-3 text-[#201d22] shadow-sm transition focus:outline-none focus:ring-4", {"border-[#d7cfc7] focus:border-[#6d4e97] focus:ring-[#6d4e97]/10": pet.errors[:notes].none?, "border-[#d97d8b] focus:border-[#c94b63] focus:ring-[#f43f5e]/10": pet.errors[:notes].any?}] %>
+    </div>
+
+    <div class="pt-2">
+      <%= form.submit class: "inline-flex w-full items-center justify-center rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white shadow-lg shadow-[#6d4e97]/20 transition hover:bg-[#563d75] focus:outline-none focus:ring-4 focus:ring-[#6d4e97]/20 sm:w-auto" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,72 @@
+<% content_for :title, "My Dashboard" %>
+
+<div class="mx-auto w-full max-w-7xl space-y-8 pb-16 pt-6">
+  <section>
+    <span class="inline-flex items-center rounded-full bg-[#f2edf8] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6d4e97]">Member portal</span>
+    <h1 class="mt-4 text-4xl font-black tracking-tight text-[#302735] md:text-5xl">Welcome back, <%= current_user.email.split("@").first.titleize %>!</h1>
+    <p class="mt-3 text-sm leading-6 text-[#6e6670]">Here is what is happening with your pets and upcoming grooming sessions.</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <%= link_to new_appointment_path, class: "rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#6d4e97]/20 transition hover:bg-[#563d75]" do %>
+        <span class="mr-2">+</span> Book New Appointment
+      <% end %>
+      <%= link_to pets_path, class: "rounded-full border border-[#6d4e97] bg-white px-5 py-3 text-sm font-bold text-[#6d4e97] transition hover:bg-[#f4eff9]" do %>
+        My Pets (<%= @pets.size %>)
+      <% end %>
+
+
+    </div>
+  </section>
+
+  <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="space-y-6">
+      <section class="rounded-[22px] border border-[#eadfd5] bg-white p-5 shadow-sm md:p-6">
+        <div class="flex items-center justify-between border-b border-[#eadfd5] pb-5">
+          <h2 class="text-lg font-black text-[#302735]">Next appointment</h2>
+          <% if @next_appointment %><span class="rounded-full bg-[#e9f7ed] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.08em] text-[#2c9b51]"><%= @next_appointment.status.presence || "Confirmed" %></span><% end %>
+        </div>
+        <% if @next_appointment %>
+          <div class="grid gap-5 py-5 sm:grid-cols-3">
+            <div><p class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Pet & breed</p><p class="mt-2 text-sm font-bold text-[#302735]"><%= @next_appointment.pet&.name || "Pet unavailable" %><span class="font-normal"> (<%= @next_appointment.pet&.breed || "Breed not set" %>)</span></p></div>
+            <div><p class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Grooming service</p><p class="mt-2 text-sm font-bold text-[#6d4e97]"><%= @next_appointment.service.presence || "Grooming session" %></p></div>
+            <div><p class="text-[10px] font-bold uppercase tracking-widest text-[#817884]">Date & time</p><p class="mt-2 text-sm font-bold text-[#302735]"><%= @next_appointment.date_time&.strftime("%b %-d, %Y @ %-I:%M %p") || "Time not set" %></p></div>
+          </div>
+          <div class="flex flex-wrap justify-end gap-3 border-t border-[#eadfd5] pt-4">
+            <%= link_to "View Appointment", appointment_path(@next_appointment), class: "rounded-full bg-[#f4eff9] px-4 py-2 text-xs font-bold text-[#6d4e97] transition hover:bg-[#eadff5]" %>
+            <%= link_to "Reschedule", edit_appointment_path(@next_appointment), class: "rounded-full border border-[#eadfd5] px-4 py-2 text-xs font-bold text-[#6e6670] transition hover:border-[#6d4e97]" %>
+          </div>
+        <% else %>
+          <div class="py-10 text-center"><p class="font-bold text-[#302735]">No upcoming appointments</p><p class="mt-2 text-sm text-[#6e6670]">Ready for your pet's next refresh?</p><%= link_to "Book an appointment", new_appointment_path, class: "mt-4 inline-block text-sm font-bold text-[#6d4e97] hover:underline" %></div>
+        <% end %>
+      </section>
+
+      <section class="rounded-[22px] border border-[#eadfd5] bg-white p-5 shadow-sm md:p-6">
+        <div class="flex items-center justify-between"><h2 class="text-lg font-black text-[#302735]">Grooming history</h2><%= link_to "View all", appointments_path, class: "text-xs font-bold text-[#6d4e97] hover:underline" %></div>
+        <div class="mt-5 overflow-x-auto"><table class="min-w-full text-left text-sm"><thead class="border-b border-[#eadfd5] text-[10px] uppercase tracking-widest text-[#817884]"><tr><th class="pb-3 pr-4">Date</th><th class="pb-3 pr-4">Service</th><th class="pb-3 pr-4">Pet</th><th class="pb-3 pr-4">Cost</th><th class="pb-3">Status</th></tr></thead><tbody class="divide-y divide-[#f1ebe6]"><% @recent_appointments.each do |appointment| %><tr><td class="py-4 pr-4 font-semibold text-[#302735]"><%= appointment.date_time&.strftime("%b %-d, %Y") || "Date not set" %></td><td class="py-4 pr-4 text-[#4d4551]"><%= appointment.service.presence || "Grooming" %></td><td class="py-4 pr-4 font-semibold text-[#6d4e97]"><%= appointment.pet&.name || "Unavailable" %></td><td class="py-4 pr-4 text-[#302735]"><%= appointment.cost ? number_to_currency(appointment.cost) : "-" %></td><td class="py-4"><span class="rounded-full bg-[#e9f7ed] px-2.5 py-1 text-[10px] font-bold uppercase text-[#2c9b51]"><%= appointment.status.presence || "Completed" %></span></td></tr><% end %></tbody></table></div>
+        <% if @recent_appointments.empty? %><p class="py-8 text-center text-sm text-[#6e6670]">Your completed appointments will appear here.</p><% end %>
+      </section>
+    </div>
+
+    <aside class="space-y-6">
+      <section class="rounded-[22px] border border-[#eadfd5] bg-white p-5 shadow-sm">
+        <div class="flex items-center justify-between"><h2 class="text-lg font-black text-[#302735]">My pets</h2><%= link_to "Add pet", new_pet_path, class: "text-xs font-bold text-[#6d4e97] hover:underline" %></div>
+        <div class="mt-4 space-y-3">
+          <% @pets.each do |pet| %>
+            <%= link_to pet_path(pet), class: "flex items-center gap-3 rounded-xl bg-[#fbf8f5] p-3 transition hover:bg-[#f4eff9]" do %>
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#efe6f8] text-lg font-black text-[#6d4e97]"><%= pet.name.to_s.first&.upcase || "P" %></span>
+              <span><span class="block text-sm font-bold text-[#302735]"><%= pet.name.presence || "Unnamed pet" %></span><span class="block text-xs text-[#6e6670]"><%= pet.breed.presence || "Breed not set" %><%= " · #{pet.size}" if pet.size.present? %></span></span>
+            <% end %>
+          <% end %>
+        </div>
+        <% if @pets.empty? %><p class="mt-4 rounded-xl bg-[#fbf8f5] p-4 text-sm text-[#6e6670]">Add your first pet to make booking faster.</p><% end %>
+      </section>
+
+      <section class="rounded-[22px] border border-[#eadfd5] bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-black text-[#302735]">Announcements & offers</h2>
+        <div class="mt-4 space-y-4">
+          <div class="flex gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#f2edf8] font-bold text-[#6d4e97]">%</span><div><p class="text-sm font-bold text-[#302735]">Seasonal special</p><p class="mt-1 text-xs leading-5 text-[#6e6670]">Save 15% on your next full grooming session.</p></div></div>
+          <div class="flex gap-3"><span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#e8f6fb] text-[#319bc4]">+</span><div><p class="text-sm font-bold text-[#302735]">New organic shampoo</p><p class="mt-1 text-xs leading-5 text-[#6e6670]">Ask your groomer about our sensitive-skin treatment.</p></div></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>

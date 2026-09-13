@@ -1,0 +1,8 @@
+<%= form_with model: owner, url: owner.persisted? ? admin_owner_path(owner) : admin_owners_path, method: owner.persisted? ? :patch : :post, class: "space-y-5" do |form| %>
+  <% if owner.errors.any? %><div class="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600"><%= owner.errors.full_messages.to_sentence %></div><% end %>
+  <div><%= form.label :user_id, "Customer account", class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.collection_select :user_id, @users, :id, :email, { prompt: "Select a customer account" }, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :full_name, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.text_field :full_name, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :phone, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.telephone_field :phone, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <div><%= form.label :email, class: "mb-2 block text-sm font-bold text-[#302936]" %><%= form.email_field :email, class: "w-full rounded-xl border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm" %></div>
+  <%= form.submit owner.persisted? ? "Save customer" : "Create customer", class: "rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold text-white" %>
+<% end %>

@@ -1,0 +1,23 @@
+<% content_for :title, "Admin Owners" %>
+
+<div class="mx-auto w-full max-w-7xl space-y-6 py-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-[#6d4e97]">Admin / Owners</p>
+      <h1 class="mt-2 text-4xl font-black text-[#201d22]">Owner directory</h1>
+    </div>
+    <div class="flex items-center gap-4"><%= link_to "Dashboard", admin_root_path, class: "text-sm font-bold text-[#6d4e97] hover:underline" %><%= link_to "Add customer", new_admin_owner_path, class: "rounded-full bg-[#6d4e97] px-4 py-2.5 text-sm font-bold text-white" %></div>
+  </div>
+
+  <div class="overflow-x-auto rounded-[22px] border border-[#eadfd5] bg-white shadow-sm">
+    <table class="min-w-full text-left text-sm">
+      <thead class="border-b border-[#eadfd5] bg-[#fbf8f5] text-xs uppercase tracking-[0.12em] text-[#6e6670]"><tr><th class="px-5 py-4">Owner</th><th class="px-5 py-4">Contact</th><th class="px-5 py-4">Pets</th><th class="px-5 py-4">Actions</th></tr></thead>
+      <tbody class="divide-y divide-[#f0e8e1]">
+        <% @owners.each do |owner| %>
+          <tr class="hover:bg-[#fbf8f5]"><td class="px-5 py-4"><%= link_to owner.full_name.presence || "Unnamed owner", admin_owner_path(owner), class: "font-bold text-[#201d22] hover:text-[#6d4e97]" %></td><td class="px-5 py-4 text-[#6e6670]"><%= owner.email.presence || owner.user&.email || "No email" %><br><%= owner.phone.presence || "No phone" %></td><td class="px-5 py-4 font-semibold text-[#201d22]"><%= owner.pets.size %></td><td class="px-5 py-4"><%= link_to "View details", admin_owner_path(owner), class: "font-bold text-[#6d4e97] hover:underline" %></td></tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @owners.empty? %><p class="p-10 text-center text-sm text-[#6e6670]">No owners found.</p><% end %>
+  </div>
+</div>

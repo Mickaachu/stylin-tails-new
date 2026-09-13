@@ -1,0 +1,74 @@
+<%= form_with(model: appointment, id: "new_appointment", class: "space-y-6") do |form| %>
+  <% if appointment.errors.any? %>
+    <div id="error_explanation" class="rounded-[18px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+      <h2><%= pluralize(appointment.errors.count, "error") %> prohibited this appointment from being saved:</h2>
+      <ul class="ml-6 list-disc"><% appointment.errors.each do |error| %><li><%= error.full_message %></li><% end %></ul>
+    </div>
+  <% end %>
+
+  <section class="rounded-[22px] border border-[#e7ddd1] bg-white p-5 shadow-sm md:p-7">
+    <div class="mb-5 flex items-center justify-between"><h2 class="text-lg font-black text-[#201d22]">Step 1: Select Service</h2><span class="text-[10px] font-bold uppercase tracking-[0.15em] text-[#6d4e97]">Required</span></div>
+    <div class="space-y-3">
+      <% service_descriptions = { "Full Grooming Session" => "Massage bath, detailed blowout, breed-specific haircut, nails & ears.", "Bath & Blowout" => "Warm massage bath, professional blowout, brushing, and ear care.", "Nail Care & File" => "Professional trim and smooth file treatment." } %>
+      <% Appointment::SERVICE_PRICES.each do |service, price| %>
+        <label class="flex cursor-pointer items-center gap-4 rounded-[14px] border border-[#eadfd5] bg-[#fbf8f5] px-4 py-3 transition hover:border-[#6d4e97] hover:shadow-md has-checked:border-[#6d4e97] has-checked:bg-[#f4eff9]">
+          <%= form.radio_button :service, service, checked: appointment.service == service || (appointment.service.blank? && service == Appointment::SERVICE_PRICES.keys.first), data: { price: price }, class: "appointment-service accent-[#6d4e97]" %>
+          <span class="flex-1"><span class="block text-sm font-black text-[#201d22]"><%= service %></span><span class="block text-xs text-[#6e6670]"><%= service_descriptions[service] %></span></span>
+          <span class="text-sm font-black text-[#6d4e97]"><%= number_to_currency(price, precision: 0) %></span>
+        </label>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="rounded-[22px] border border-[#e7ddd1] bg-white p-5 shadow-sm md:p-7">
+    <h2 class="mb-5 text-lg font-black text-[#201d22]">Step 2: Choose Date &amp; Time</h2>
+    <div>
+      <%= form.label :date_time, "Choose an available slot", class: "mb-2 block text-xs font-bold uppercase tracking-[0.08em] text-[#6e6670]" %>
+      <%= form.datetime_field :date_time, class: "w-full rounded-[12px] border border-[#eadfd5] bg-[#fbf8f5] px-3 py-3 text-sm text-[#201d22] outline-none focus:border-[#6d4e97] focus:ring-2 focus:ring-[#6d4e97]/20" %>
+      <div class="mt-4 space-y-3">
+        <% @availabilities.group_by(&:available_on).each do |date, availability_windows| %>
+          <div><p class="mb-2 text-xs font-bold text-[#201d22]"><%= date.strftime("%A, %B %-d") %></p><div class="flex flex-wrap gap-2"><% availability_windows.each do |availability| %><% availability.slots.each do |slot| %><button type="button" data-date-time="<%= slot.strftime("%Y-%m-%dT%H:%M") %>" onclick="document.getElementById('appointment_date_time').value = this.dataset.dateTime; document.getElementById('appointment_date_time').dispatchEvent(new Event('change'))" class="rounded-full border border-[#eadfd5] bg-[#fbf8f5] px-3 py-2 text-xs font-semibold text-[#4d4551] transition hover:border-[#6d4e97] hover:bg-[#f4eff9]"><%= slot.strftime("%-I:%M %p") %></button><% end %><% end %></div></div>
+        <% end %>
+        <% if @availabilities.empty? %><p class="rounded-xl bg-[#fbf8f5] p-4 text-sm text-[#6e6670]">The salon has not published any appointment availability yet.</p><% end %>
+      </div>
+    </div>
+  </section>
+
+  <section class="rounded-[22px] border border-[#e7ddd1] bg-white p-5 shadow-sm md:p-7">
+    <div class="flex justify-between items-center">
+      <h2 class="mb-5 text-lg font-black text-[#201d22]">Step 3: Pet Information</h2>
+      <%= link_to new_pet_path do %>
+        <%= button_tag "Add New Pet", class: "rounded-full bg-[#6d4e97] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#563d75] hover:shadow-lg hover:shadow-[#6d4e97]/20" %>
+      <% end %>
+    </div>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div>
+        <%= form.label :pet_id, "Select Pet", class: "mb-2 block text-xs font-bold text-[#201d22]" %>
+        <%= form.select :pet_id, options_for_select(@pets.map { |pet| [pet.name, pet.id] }, appointment.pet_id), { prompt: "Select a pet" }, class: "w-full rounded-[10px] border border-[#eadfd5] bg-[#fbf8f5] px-3 py-2.5 text-sm outline-none focus:border-[#6d4e97] focus:ring-2 focus:ring-[#6d4e97]/20" %>
+      </div>
+      <div class="md:col-span-2 rounded-xl bg-[#fbf8f5] p-4 text-sm text-[#6e6670]">Pet details are taken from the pet profile. <%= link_to "Edit pets", pets_path, class: "font-bold text-[#6d4e97] hover:underline" %></div>
+    </div>
+  </section>
+
+  <section class="rounded-[22px] border border-[#e7ddd1] bg-white p-5 shadow-sm md:p-7">
+    <h2 class="mb-5 text-lg font-black text-[#201d22]">Step 4: Owner's Contact Information</h2>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div><label class="mb-2 block text-xs font-bold text-[#201d22]">Your Full Name</label><input type="text" value="<%= current_user.owner&.full_name %>" readonly class="w-full rounded-[10px] border border-[#eadfd5] bg-[#f3eee9] px-3 py-2.5 text-sm text-[#6e6670]"></div>
+      <div><label class="mb-2 block text-xs font-bold text-[#201d22]">Phone Number</label><input type="tel" value="<%= current_user.owner&.phone %>" readonly class="w-full rounded-[10px] border border-[#eadfd5] bg-[#f3eee9] px-3 py-2.5 text-sm text-[#6e6670]"></div>
+      <div class="md:col-span-2"><label class="mb-2 block text-xs font-bold text-[#201d22]">Email Address</label><input type="email" value="<%= current_user.email %>" readonly class="w-full rounded-[10px] border border-[#eadfd5] bg-[#f3eee9] px-3 py-2.5 text-sm text-[#6e6670]"></div>
+      <div class="md:col-span-2 flex items-center justify-between rounded-xl bg-[#f4eff9] px-4 py-3"><span class="text-sm font-bold text-[#302735]">Estimated cost</span><span id="appointment-cost" class="text-xl font-black text-[#6d4e97]"><%= number_to_currency(appointment.cost || Appointment::SERVICE_PRICES.values.first, precision: 0) %></span></div>
+    </div>
+  </section>
+
+  <%= form.submit "Confirm Booking", class: "w-full rounded-full bg-[#6d4e97] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#563d75] lg:hidden" %>
+<% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".appointment-service").forEach(function (service) {
+      service.addEventListener("change", function () {
+        document.getElementById("appointment-cost").textContent = "$" + this.dataset.price;
+      });
+    });
+  });
+</script>

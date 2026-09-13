@@ -1,0 +1,19 @@
+<div id="<%= dom_id pet %>" class="flex w-full items-center gap-4">
+  <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#6d4e97] to-[#a57bc7] text-lg font-black text-white shadow-lg shadow-[#6d4e97]/20">
+    <%= pet.name.to_s.first.upcase %>
+  </div>
+
+  <div class="min-w-0 flex-1">
+    <div class="flex flex-wrap items-center gap-2">
+      <h2 class="text-xl font-bold text-[#201d22]"><%= pet.name %></h2>
+      <span class="rounded-full bg-[#f2eaf9] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#6d4e97]">
+        <%= pet.size %>
+      </span>
+    </div>
+
+    <div class="mt-2 flex flex-wrap gap-3 text-sm text-[#5b5562]">
+      <span><strong class="text-[#201d22]">Breed:</strong> <%= pet.breed %></span>
+      <span><strong class="text-[#201d22]">Notes:</strong> <%= pet.notes %></span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2 @@
+<% content_for :title, "Edit Appointment" %>
+<div class="mx-auto w-full max-w-2xl space-y-5"><%= link_to "Back to appointment", admin_appointment_path(@appointment), class: "text-sm font-bold text-[#6d4e97]" %><section class="rounded-2xl border border-[#eadfd5] bg-white p-6 shadow-sm"><h1 class="mb-6 text-3xl font-black text-[#302936]">Edit appointment</h1><%= render "form", appointment: @appointment %></section></div>

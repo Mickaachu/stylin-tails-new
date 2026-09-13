@@ -1,0 +1,17 @@
+<header class="sticky top-0 z-50 border-b border-[#e8e0d9] bg-white/90 backdrop-blur-sm">
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:px-8">
+    <%= link_to root_path, class: "shrink-0" do %>
+      <%= image_tag "/logo.png", alt: "Stylin Tails", class: "h-10 w-auto" %>
+    <% end %>
+    <nav class="hidden items-center gap-8 text-sm font-medium text-[#4d4551] md:flex">
+      <%= link_to "Home", root_path, class: "transition hover:text-[#6d4e97]" %>
+      <%= link_to "About", about_path, class: "transition hover:text-[#6d4e97]" %>
+      <%= link_to "Grooming Services", services_path, class: "transition hover:text-[#6d4e97]" %>
+      <%= link_to "Contact", contact_path, class: "transition hover:text-[#6d4e97]" %>
+    </nav>
+    <div class="flex items-center gap-3 text-sm font-bold">
+      <%= link_to "Sign in", new_user_session_path, class: "hidden text-[#6d4e97] transition hover:text-[#563d75] sm:inline" %>
+      <%= link_to "Book Appointment", new_appointment_path, class: "rounded-full bg-[#6d4e97] px-4 py-2.5 text-white transition hover:bg-[#563d75]" %>
+    </div>
+  </div>
+</header>
